@@ -1,12 +1,40 @@
 version: '3.8'
 
 services:
-  nginx:
+  database:
+    container_name: mypostgres
+    image: postgres:15-alpine
     build: .
-    container_name: mynginx
-    restart: "no"
     ports:
-      - "8080:80"
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "info"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./html:/var/www/html
+      - django_data_volume:/var/lib/postgresql/data
+  rest_api:
+    container_name: mydjangorestapi
+    build: .
+    ports:
+      - 8000:8000
+    command: ./run-migrate-and-server.sh
+    volumes:
+      - ./code/django_rest_api:/code
+    tty: true
+    depends_on:
+      - database
+  web_front:
+    container_name: mydjangowebfront
+    build: .
+    ports:
+      - 3000:3000
+    command: ./npm-install-and-start.sh
+    volumes:
+      - ./code/django_web_front:/code
+    tty: true
+    depends_on:
+      - rest_api
+
+volumes:
+  django_data_volume:

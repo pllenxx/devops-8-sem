@@ -5,6 +5,8 @@ RUN apk add --no-cache nginx && \
     mkdir -p /var/www/html /etc/nginx/conf.d && \
     chown -R nginx:nginx /var/www/html /etc/nginx/conf.d /var/lib/nginx /var/log/nginx
 
+RUN
+
 COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
