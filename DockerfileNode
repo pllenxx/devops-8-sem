@@ -1,16 +1,20 @@
 FROM node:18-alpine
 
+ENV APP_HOME=/code
+ENV NODE_ENV=production
+ENV PATH="$APP_HOME/node_modules/.bin:$PATH"
+
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-WORKDIR /code
+WORKDIR $APP_HOME
 
-COPY ./code/django_web_front/package.json /code/
+COPY ./code/django_web_front/package.json $APP_HOME/
 RUN npm install --omit=dev && \
     npm cache clean --force
 
-COPY ./code/django_web_front /code/
+COPY ./code/django_web_front $APP_HOME/
 
-RUN chown -R appuser:appgroup /code
+RUN chown -R appuser:appgroup $APP_HOME
 USER appuser
 
 EXPOSE 3000

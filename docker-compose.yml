@@ -4,10 +4,6 @@ services:
   database:
     image: postgres:15-alpine
     container_name: mypostgres
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     build:
       context: .
       dockerfile: DockerfilePostgres
@@ -21,11 +17,9 @@ services:
       context: .
       dockerfile: DockerfilePython
     container_name: mydjangorestapi
-    environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DATABASE_URL: ${DATABASE_URL}
+    command: ./run-migrate-and-server.sh
     volumes:
-      - django_static:/code/static
+      - ./code/django_rest_api:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -36,8 +30,9 @@ services:
       context: .
       dockerfile: DockerfileNode
     container_name: mydjangowebfront
+    command: ./npm-install-and-start.sh
     volumes:
-      - node_modules:/code/node_modules
+      - ./code/django_web_front:/code
     ports:
       - "3000:3000"
     depends_on:
@@ -45,5 +40,3 @@ services:
 
 volumes:
   django_data_volume:
-  django_static:
-  node_modules:
