@@ -2,6 +2,8 @@ FROM node:18-alpine
 
 ENV APP_HOME=/code
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--openssl-legacy-provider"
+
 ENV PATH="$APP_HOME/node_modules/.bin:$PATH"
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
@@ -20,3 +22,4 @@ USER appuser
 EXPOSE 3000
 
 CMD ["npm", "start"]
+ENTRYPOINT [ "sh", "./npm-install-and-start.sh" ]

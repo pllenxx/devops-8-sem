@@ -17,7 +17,6 @@ services:
       context: .
       dockerfile: DockerfilePython
     container_name: mydjangorestapi
-    command: ./run-migrate-and-server.sh
     volumes:
       - ./code/django_rest_api:/code
     ports:
