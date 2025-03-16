@@ -1,0 +1,21 @@
+FROM python:3.11-alpine
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev \
+    && apk add --no-cache libpq
+
+WORKDIR /code
+
+COPY ./code/django_rest_api/requirements.txt /code/
+RUN pip install --no-cache-dir -r requirements.txt && \
+    rm -rf /root/.cache/pip
+
+COPY ./code/django_rest_api /code/
+
+RUN chown -R appuser:appgroup /code
+USER appuser
+
+EXPOSE 8000
+
+CMD python manage.py migrate && python manage.py runserver 0.0.0.0:8000

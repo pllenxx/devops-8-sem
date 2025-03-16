@@ -1,0 +1,18 @@
+FROM node:18-alpine
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+WORKDIR /code
+
+COPY ./code/django_web_front/package.json /code/
+RUN npm install --omit=dev && \
+    npm cache clean --force
+
+COPY ./code/django_web_front /code/
+
+RUN chown -R appuser:appgroup /code
+USER appuser
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
