@@ -2,13 +2,13 @@ version: '3.8'
 
 services:
   database:
-    image: alpine:latest
     container_name: mypostgres
     build:
       context: .
       dockerfile: docker/postgres/Dockerfile
-    volumes:
-      - django_data_volume:/var/lib/postgresql/data
+    # volumes:
+      # - django_data_volumeq:/var/lib/postgresql/data
+
     ports:
       - "5432:5432"
 
@@ -17,8 +17,6 @@ services:
       context: .
       dockerfile: docker/python/Dockerfile
     container_name: mydjangorestapi
-    volumes:
-      - ./code/django_rest_api:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -33,7 +31,7 @@ services:
     volumes:
       - ./code/django_web_front:/code
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       - rest_api
 
