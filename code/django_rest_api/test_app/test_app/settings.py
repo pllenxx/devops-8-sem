@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'p1%(#wh0lkq0n@v#fyc-(yumbpthqyr9qa_fw5%f*)+n7$casl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -82,7 +82,7 @@ DATABASES = {
     'ENGINE': 'django.db.backends.postgresql',
     'NAME': 'test_app',
     'USER': 'postgres',
-    'HOST': 'db',
+    'HOST': '',
     'PORT': 5432,
   }
 }
@@ -126,9 +126,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000/',
-    'localhost:3000',
-    '192.168.33.15:3000/',
-    '192.168.33.15:3000',
-)
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://localhost:3000',
+    'http://192.168.33.15:3000',
+    'http://192.168.33.15:3000',
+]
