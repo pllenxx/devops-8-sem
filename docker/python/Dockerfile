@@ -1,4 +1,4 @@
-FROM python:3.11-alpine
+FROM alpine:latest
 
 ENV APP_HOME=/code
 ENV PATH="$APP_HOME/bin:$PATH"
@@ -7,12 +7,15 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR $APP_HOME
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev \
-    && apk add --no-cache libpq
+
+RUN apk add --no-cache python3 py3-pip py3-setuptools python3-dev \
+    && apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev libpq build-base
+
+
+RUN python3 -m venv $APP_HOME/venv
 
 COPY ./code/django_rest_api/requirements.txt $APP_HOME/
-RUN pip install --no-cache-dir -r requirements.txt && \
-    rm -rf /root/.cache/pip
+RUN source $APP_HOME/venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 
 COPY ./code/django_rest_api $APP_HOME/
 

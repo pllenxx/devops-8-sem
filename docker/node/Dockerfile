@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM alpine:latest
 
 ENV APP_HOME=/code
 ENV NODE_ENV=production
@@ -9,6 +9,8 @@ ENV PATH="$APP_HOME/node_modules/.bin:$PATH"
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR $APP_HOME
+
+RUN apk add --no-cache nodejs npm
 
 COPY ./code/django_web_front/package.json $APP_HOME/
 RUN npm install --omit=dev && \

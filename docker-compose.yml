@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   database:
-    image: postgres:15-alpine
+    image: alpine:latest
     container_name: mypostgres
     build:
       context: .
-      dockerfile: DockerfilePostgres
+      dockerfile: docker/postgres/Dockerfile
     volumes:
       - django_data_volume:/var/lib/postgresql/data
     ports:
@@ -15,7 +15,7 @@ services:
   rest_api:
     build:
       context: .
-      dockerfile: DockerfilePython
+      dockerfile: docker/python/Dockerfile
     container_name: mydjangorestapi
     volumes:
       - ./code/django_rest_api:/code
@@ -27,7 +27,7 @@ services:
   web_front:
     build:
       context: .
-      dockerfile: DockerfileNode
+      dockerfile: docker/node/Dockerfile
     container_name: mydjangowebfront
     command: ./npm-install-and-start.sh
     volumes:

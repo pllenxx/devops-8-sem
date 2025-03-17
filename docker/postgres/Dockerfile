@@ -1,4 +1,4 @@
-FROM postgres:15-alpine
+FROM alpine:latest
 
 COPY ./code/django_db/init-user-db.sh /docker-entrypoint-initdb.d/
 
