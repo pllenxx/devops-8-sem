@@ -16,11 +16,11 @@ if [ ! -s "$PGDATA/PG_VERSION" ]; then
     if [ "$POSTGRES_USER" ] && [ "$POSTGRES_PASSWORD" ]; then
         psql --username="$POSTGRES_USER" --dbname="$POSTGRES_DB" --command "ALTER USER \"$POSTGRES_USER\" WITH PASSWORD '$POSTGRES_PASSWORD';"
     fi
-	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-	CREATE DATABASE test_app;
-	GRANT ALL PRIVILEGES ON DATABASE test_app TO $POSTGRES_USER;
-	EOSQL
-
+#	psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+#	CREATE DATABASE test_app;
+#	GRANT ALL PRIVILEGES ON DATABASE test_app TO $POSTGRES_USER;
+#	EOSQL
+#
     pg_ctl stop
 fi
 
