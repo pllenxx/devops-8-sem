@@ -3,11 +3,10 @@ FROM alpine:latest AS build
 ENV APP_HOME=/code
 WORKDIR $APP_HOME
 
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nodejs npm && rm -rf /var/cache/apk/*
 
 COPY ./code/django_web_front/package.json $APP_HOME/
-RUN npm install --omit=dev && \
-    npm cache clean --force
+RUN npm install --omit=dev
 
 COPY ./code/django_web_front $APP_HOME/
 
@@ -16,7 +15,7 @@ FROM alpine:latest
 ENV APP_HOME=/code
 WORKDIR $APP_HOME
 
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nodejs npm && rm -rf /var/cache/apk/*
 
 COPY --from=build $APP_HOME $APP_HOME
 

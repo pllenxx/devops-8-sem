@@ -6,11 +6,15 @@ WORKDIR $APP_HOME
 RUN apk add --no-cache python3 py3-pip py3-setuptools python3-dev \
     && apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev libpq build-base
 
+COPY ./code/django_rest_api/requirements.txt $APP_HOME/
+
+RUN python3 -m venv $APP_HOME/venv && \
+    source $APP_HOME/venv/bin/activate && \
+    pip install --no-cache-dir -r requirements.txt
+
+RUN apk del .build-deps
+
 COPY ./code/django_rest_api $APP_HOME/
-
-RUN python3 -m venv $APP_HOME/venv
-
-RUN source $APP_HOME/venv/bin/activate && pip install --no-cache-dir -r requirements.txt
 
 FROM alpine:latest
 
@@ -19,7 +23,7 @@ ENV PATH="$APP_HOME/bin:$PATH"
 
 WORKDIR $APP_HOME
 
-RUN apk add --no-cache python3 py3-pip py3-setuptools libpq
+RUN apk add --no-cache python3 py3-pip py3-setuptools libpq && rm -rf /var/cache/apk/*
 
 COPY --from=build $APP_HOME $APP_HOME
 
