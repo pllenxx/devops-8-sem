@@ -1,13 +1,6 @@
-FROM alpine:latest
+FROM alpine:latest AS build
 
 ENV APP_HOME=/code
-ENV NODE_ENV=production
-ENV NODE_OPTIONS="--openssl-legacy-provider"
-
-ENV PATH="$APP_HOME/node_modules/.bin:$PATH"
-
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
 WORKDIR $APP_HOME
 
 RUN apk add --no-cache nodejs npm
@@ -18,7 +11,18 @@ RUN npm install --omit=dev && \
 
 COPY ./code/django_web_front $APP_HOME/
 
+FROM alpine:latest
+
+ENV APP_HOME=/code
+WORKDIR $APP_HOME
+
+RUN apk add --no-cache nodejs npm
+
+COPY --from=build $APP_HOME $APP_HOME
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN chown -R appuser:appgroup $APP_HOME
+
 USER appuser
 
 EXPOSE 3000
