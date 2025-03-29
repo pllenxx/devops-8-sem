@@ -2,20 +2,23 @@ version: '3.8'
 
 services:
   database:
+    image: postgres:latest
     container_name: mypostgres
-    build:
-      context: .
-      dockerfile: docker/postgres/Dockerfile
-    # volumes:
-      # - django_data_volumeq:/var/lib/postgresql/data
-
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test_app
     ports:
       - "5432:5432"
 
   rest_api:
     build:
       context: .
-      dockerfile: docker/python/Dockerfile
+      dockerfile: docker/run.Dockerfile
+      cache_from:
+        - system
+        - build
+        - app
     container_name: mydjangorestapi
     ports:
       - "8000:8000"
@@ -25,15 +28,18 @@ services:
   web_front:
     build:
       context: .
-      dockerfile: docker/node/Dockerfile
+      dockerfile: docker/run.Dockerfile
+      cache_from:
+        - system
+        - build
+        - app
     container_name: mydjangowebfront
-    command: ./npm-install-and-start.sh
+    command:  ["sh", "./npm-install-and-start.sh"]
     volumes:
       - ./code/django_web_front:/code
     ports:
       - "3001:3000"
     depends_on:
-      - rest_api
-
+      - database
 volumes:
   django_data_volume:
